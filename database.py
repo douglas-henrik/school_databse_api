@@ -1,8 +1,13 @@
+# Importando dependencias
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
+from dotenv import load_dotenv
 
-DATABASE_URL = 'postgresql://postgres:bgfds123@localhost:5432/db_escola' # URL do DataBase
+load_dotenv() # Carrega o dotenv
+
+DATABASE_URL = os.getenv('DATABASE_URL') # Carrega a URL que esta guardada no .env
 
 engine = create_engine(DATABASE_URL) # Motor do DataBase
 
