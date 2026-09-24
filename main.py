@@ -19,6 +19,8 @@ def get_db(): # Função para abrir DataBase e Fechar
 # Rota POST para criar estudantes
 @app.post('/estudantes', response_model=schemas.Estudante)
 def criar_estudante(estudante: schemas.EstudanteCreate, db: Session=Depends(get_db)): # Função de criar estudantes, estudante é validado pela schema e database chama o get_db
+    if estudante.perfil.idade <= 0: # Valida a idade do estudante
+        raise HTTPException(status_code=422, detail='Idade inválida') # Lança exceção se estiver incorreto
     db_estudante = models.Estudante( # Criando instacia de Estudante
         nome = estudante.nome, # Desempacota o nome
         email = estudante.email, # Desempacota o email
@@ -36,18 +38,24 @@ def criar_estudante(estudante: schemas.EstudanteCreate, db: Session=Depends(get_
 @app.get('/estudantes', response_model=List[schemas.Estudante])
 def listar_estudantes(db: Session=Depends(get_db)): # Recebe sessão do DataBase como parametro
     estudantes = db.query(models.Estudante).all() # Buscar tudo que se encontra na tabela estudantes
+    if not estudantes: # Verifica se há estudantes
+        raise HTTPException(status_code=404, detail='Nenhum estudante cadastrado') # Lança a exceção
     return estudantes # Retornar a lista com todos os estudantes
 
 # Rota GET para buscar um estudante
 @app.get('/estudantes/', response_model=schemas.Estudante)
 def consultar_estudante(nome_estudante: str, db: Session=Depends(get_db)): # Busca um unico estudante pelo nome
     estudante = db.query(models.Estudante).filter(models.Estudante.nome == nome_estudante).first() # Retorna o primeiro estudante cujo nome seja igual ao solicitado
+    if not estudante: # Verifica se existe esse estudante
+        raise HTTPException(status_code=404, detail=f'Nenhum {nome_estudante} encontrado') # Lança a exceção
     return estudante
 
 # Rota DELETE para deletar estudantes
 @app.delete('/estudantes/', response_model=schemas.Estudante)
 def deletar_estudante(id_estudante: int, db: Session=Depends(get_db)): # Busca o estudante pelo ID
     estudante = db.query(models.Estudante).filter(models.Estudante.id == id_estudante).first() # Retorna o primeiro estudante cujo ID seja igual o solicitado
+    if not estudante: # Verifica se existe esse estudante
+        raise HTTPException(status_code=404, detail='Nenhum estudante com esse ID encontrado') # Lança a exceção
     db.delete(estudante) # Deleta estudante do DataBase
     db.commit() # Confirma as alterações
     return estudante # Retorna o estudante removido
