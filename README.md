@@ -240,14 +240,14 @@ O principal objetivo é praticar conceitos como:
 
 Algumas melhorias que podem ser implementadas futuramente:
 
-* [ ] Implementar tratamento de estudante não encontrado;
+* [ X ] Implementar tratamento de estudante não encontrado;
 * [ ] Completar as operações CRUD;
 * [ ] Melhorar as validações dos dados;
-* [ ] Utilizar variáveis de ambiente para as credenciais do banco;
+* [ X ] Utilizar variáveis de ambiente para as credenciais do banco;
 * [ ] Adicionar mais endpoints;
 * [ ] Implementar atualização de estudantes;
 * [ ] Adicionar testes automatizados;
-* [ ] Melhorar o tratamento de erros;
+* [ X ] Melhorar o tratamento de erros;
 * [ ] Organizar o projeto em uma estrutura maior conforme a API evoluir.
 
 ---
