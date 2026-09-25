@@ -48,3 +48,39 @@ class Perfil(Base): # Criando classe Perfil
         'Estudante', # Relação com a classe Estudante
         back_populates='perfil' # Atributo dessa classe
     )
+
+class Professor(Base): # Criando classe Professor
+    __tablename__ = 'professores' # Nome da tabela
+    id = Column( # Coluna ID
+        Integer,
+        primary_key=True,
+        index=True
+    )
+    nome = Column( # Coluna Nome
+        String(50),
+        nullable=False
+    )
+    email = Column( # Coluna email
+        String(100),
+        nullable=False
+    )
+
+class Disciplina(Base): # Criando classe Disciplina
+    __tablename__ = 'disciplinas' # Nome da tabela
+    id = Column( # Coluna ID
+        Integer,
+        primary_key=True,
+        index=True
+    )
+    nome_disciplina = Column( # Coluna Nome
+        String(100),
+        nullable=False
+    )
+    professor_id = Column( # Coluna Professor
+        Integer,
+        ForeignKey('professores.id'),
+        unique=True
+    )
+    professor = relationship( # Atributo de relação
+            'Professor' # Classe Professor
+        )
