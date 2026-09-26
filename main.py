@@ -135,3 +135,49 @@ def ecluir_disciplina(id: int, db: Session=Depends(get_db)):
     db.delete(disciplina)
     db.commit()
     return disciplina
+
+# Rota PATCH para vicular professor a disciplina
+@app.patch('/disciplinas/{id_disciplina}/professor', response_model=schemas.Disciplina)
+def vincular_professor_e_disciplina(id_disciplina: int, id_professor: int, db: Session=Depends(get_db)):
+    disciplina = db.query(models.Disciplina).filter(models.Disciplina.id == id_disciplina).first()
+    professor = db.query(models.Professor).filter(models.Professor.id == id_professor).first()
+    if not disciplina or not professor:
+        raise HTTPException(status_code=404, detail=f'Disciplina ou Professor não encontrado')
+    disciplina.professor_id = professor.id
+    db.commit()
+    db.refresh(disciplina)
+    return disciplina
+
+# Rota POST para fazer matriculas
+@app.post('/matriculas', response_model=schemas.Matricula)
+def fazer_matricula(matricula: schemas.MatriculaCreate, db: Session=Depends(get_db)):
+    estudante = db.query(models.Estudante).get(matricula.estudante_id)
+    disciplina = db.query(models.Disciplina).get(matricula.disciplina_id)
+    if not estudante or not disciplina:
+        raise HTTPException(status_code=404, detail='Estudante ou Disciplina não encontrado')
+    db_matricula = models.Matricula(
+        estudante_id=matricula.estudante_id,
+        disciplina_id=matricula.disciplina_id
+    )
+    db.add(db_matricula)
+    db.commit()
+    db.refresh(db_matricula)
+    return db_matricula
+
+# Rota GET para listar as matriculas
+@app.get('/matriculas', response_model=List[schemas.Matricula])
+def listar_matriculas(db: Session=Depends(get_db)):
+    matriculas = db.query(models.Matricula).all()
+    if not matriculas:
+        raise HTTPException(status_code=404,detail='Nenhuma matricula encontrada')
+    return matriculas
+
+# Rota DELETE cancelar matricula
+@app.delete('/matriculas', response_model=schemas.Matricula)
+def cancelar_matricula(id_matricula: int, db: Session=Depends(get_db)):
+    matricula = db.query(models.Matricula).filter(models.Matricula.id == id_matricula).first()
+    if not matricula:
+        raise HTTPException(status_code=404,detail='Nenhuma matricula encontrada')
+    db.delete(matricula)
+    db.commit()
+    return matricula

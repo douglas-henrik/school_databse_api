@@ -84,3 +84,19 @@ class Disciplina(Base): # Criando classe Disciplina
     professor = relationship( # Atributo de relação
             'Professor' # Classe Professor
         )
+
+class Matricula(Base): # Criando classe Matricula
+    __tablename__ = 'matriculas' # Nome da tabela
+    id = Column( # Coluna ID
+        Integer,
+        primary_key=True,
+        index=True
+    )
+    estudante_id = Column( # Coluna Estudante
+        Integer,
+        ForeignKey('estudantes.id')
+    )
+    disciplina_id = Column( # Coluna Disciplina
+        Integer,
+        ForeignKey('disciplinas.id')
+    )

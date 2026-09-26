@@ -50,3 +50,12 @@ class Disciplina(BaseModel): # Validando disciplinas
 class DisciplinaCreate(BaseModel): # Validando a criação de disciplinas
     nome_disciplina: str # Tem que ser str
     professor_id: Optional[int] = None # Opcional
+
+class Matricula(BaseModel): # Validando Matricula
+    id: int # Tem que ser int
+    estudante_id: int # Tem que ser int
+    disciplina_id: int # Tem que ser int
+
+class MatriculaCreate(BaseModel): # Validando criação de matriculas
+    estudante_id: int # Tem que ser int
+    disciplina_id: int # Tem que ser int
